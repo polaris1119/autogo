@@ -18,6 +18,19 @@ autogo就是为了让Go开发更方便。在开发阶段，做到修改之后，
 
 4、运行autogo：bin/autogo
   注意，运行autogo时，当前目录要切换到autogo所在目录
+  
+注：为了方便编译出错时看到错误详细信息，当有错误时autogo会在项目中新建一个文件，将错误信息写入其中。
+因此建议测阶段，在被监控的项目中加入如下一段代码：
+
+
+使用的第三方库
+======
+
+为了方便，autogo中直接包含了第三方库，不需要另外下载。
+
+1、[fsnotify](https://github.com/howeyc/fsnotify)，File system notifications
+
+2、[simplejson](https://github.com/bitly/go-simplejson)，解析JSON，我做了一些改动
 
 LICENCE
 ======
