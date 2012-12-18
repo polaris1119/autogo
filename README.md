@@ -7,4 +7,4 @@ autogo就是为了让Go开发更方便。在开发阶段，做到修改之后，
 LICENCE
 ======
 
-The MIT License(https://github.com/polaris1119/autogo/master/LICENSE)
+The MIT [License](https://github.com/polaris1119/autogo/master/LICENSE)
