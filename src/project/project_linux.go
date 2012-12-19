@@ -10,7 +10,7 @@ import (
 
 var (
     makeTplFile       = "templates/make_linux.tpl"
-    makeFileName      = "make"
+    makeFileName      = "run"
     binanryFileSuffix = ""
 )
 
