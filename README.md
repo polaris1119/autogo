@@ -20,8 +20,80 @@ autogo就是为了让Go开发更方便。在开发阶段，做到修改之后，
   注意，运行autogo时，当前目录要切换到autogo所在目录
   
 注：为了方便编译出错时看到错误详细信息，当有错误时autogo会在项目中新建一个文件，将错误信息写入其中。
-因此建议测阶段，在被监控的项目中加入如下一段代码：
+因此建议测阶段，在被监控的项目中加入如下一段代码（在所有访问的入口处）：
+    
+    errFile := "_log_/error.html"
+    _, err := os.Stat(errFile)
+    if err == nil || os.IsExist(err) {
+        content, _ := ioutil.ReadFile(errFile)
+        fmt.Fprintln(rw, string(content))
+        return
+    }
+这样，当程序编译出错时，刷新页面会看到类似如下的错误提示：
 
+    ~~o(>_<)o ~~主人，编译出错了哦！
+    
+    错误详细信息：
+    
+    # test src\test\main.go:5: imported and not used: "io"
+
+例子程序
+======
+
+1、在任意目录新建一个test工程。目录结构如下：
+    
+    test
+    └───src
+        └───test
+              └───main.go
+2、main.go的代码如下：
+    
+    import (
+      "fmt"
+      "io/ioutil"
+      "log"
+      "net/http"
+      "os"
+      "runtime"
+    )
+    func init() {
+        runtime.GOMAXPROCS(runtime.NumCPU())
+    }
+    
+    func main() {
+        http.HandleFunc("/", mainHandle)
+    
+        log.Fatal(http.ListenAndServe(":8080", nil))
+    }
+    
+    func mainHandle(rw http.ResponseWriter, req *http.Request) {
+        // 当编译出错时提示错误信息；开发阶段使用
+        errFile := "_log_/error.html"
+        _, err := os.Stat(errFile)
+        if err == nil || os.IsExist(err) {
+            content, _ := ioutil.ReadFile(errFile)
+            fmt.Fprintln(rw, string(content))
+            return
+        }
+        fmt.Fprintln(rw, "Hello, World!")
+        // 这里可以统一路由转发
+    }
+
+3、在autogo的config/project.json中将该项目加进去
+    
+    [
+      {
+          "name": "test",
+          "root": "../test",
+          "depends": []
+      }
+    ]
+    root可以是相对路径或决定路径、
+
+4、启动autogo（如果autogo没编译，先通过make编译）。注意，启动autogo应该cd到autogo所在根目录执行bin/autogo启动。
+
+5、在浏览器中访问：http://localhost:8080，就可以看到Hello World！了。
+  改动test中的main.go，故意出错，然后刷新页面看到效果了有木有！
 
 使用的第三方库
 ======
