@@ -177,7 +177,8 @@ func (this *Project) Compile() error {
     }
     this.ChangeToRoot()
     defer os.Chdir(path)
-    cmd := exec.Command(makeFileName)
+    os.Chmod(makeFileName, 0755)
+    cmd := exec.Command(os.Getenv("SHELL"), "-c", "cd "+this.Root+" && ./"+makeFileName)
     var out bytes.Buffer
     cmd.Stdout = &out
     if err := cmd.Run(); err != nil {
