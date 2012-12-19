@@ -6,7 +6,7 @@ export GOPATH="$CURDIR:{{range .Depends}}{{.}}:{{end}}"
 
 gofmt -tabs=false -tabwidth=4 -w src
 
-go install {{{.Name}}
+go install {{.Name}}
 
 export GOPATH="$OLDGOPATH"
 
