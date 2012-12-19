@@ -7,7 +7,7 @@ fi
 
 CURDIR=`pwd`
 OLDGOPATH="$GOPATH"
-export GOPATH="$CURDIR:{{range .Depends}}{{.}}{{end}}"
+export GOPATH="$CURDIR:{{range .Depends}}{{.}}:{{end}}"
 
 gofmt -tabs=false -tabwidth=4 -w src
 
