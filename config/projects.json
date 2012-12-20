@@ -1,7 +1,10 @@
 [
     {
-        "name": "",
-        "root": "",
+        "name": "test",
+        "root": "../test",
+        "go_way": "install",
+        "deamon": true,
+        "main": "test1/test.go",
         "depends": []
     }
 ]

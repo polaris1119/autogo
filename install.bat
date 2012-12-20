@@ -2,8 +2,8 @@
 
 setlocal
 
-if exist make.bat goto ok
-echo make.bat must be run from its folder
+if exist install.bat goto ok
+echo install.bat must be run from its folder
 goto end
 
 :ok

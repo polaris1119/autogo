@@ -10,13 +10,15 @@ import (
 
 var (
     makeTplFile       = "templates/make_win.tpl"
-    makeFileName      = "make.bat"
+    installFileName   = "install.bat"
     binanryFileSuffix = ".exe"
+
+    installCmd = installFileName // 编译时传给Command的名称
 )
 
 // Stop 停止该Project
 func (this *Project) Stop() error {
-    cmd := exec.Command("taskkill", "/F", "/IM", this.Name+binanryFileSuffix)
+    cmd := exec.Command("taskkill", "/F", "/IM", this.MainFile+binanryFileSuffix)
     if err := cmd.Run(); err != nil {
         return err
     }

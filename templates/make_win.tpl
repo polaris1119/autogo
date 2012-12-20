@@ -2,8 +2,8 @@
 
 setlocal
 
-if exist make.bat goto ok
-echo make.bat must be run from its folder
+if exist install.bat goto ok
+echo install.bat must be run from its folder
 goto end
 
 :ok
@@ -11,9 +11,10 @@ goto end
 set OLDGOPATH=%GOPATH%
 set GOPATH=%~dp0;{{range .Depends}}{{.}};{{end}}
 
-gofmt -tabs=false -tabwidth=4 -w src
+::打开代码格式化可能会导致监控两次
+::gofmt -tabs=false -tabwidth=4 -w src
 
-go install {{.Name}}
+go {{.GoWay}} {{.Options}} {{.MainFile}}
 
 set GOPATH=%OLDGOPATH%
 
