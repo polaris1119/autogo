@@ -115,6 +115,11 @@ autogo就是为了让Go开发更方便。在开发阶段，做到修改之后，
 
 2、[simplejson](https://github.com/bitly/go-simplejson)，解析JSON，我做了一些改动
 
+感谢
+=====
+johntech
+[ohlinux](https://github.com/ohlinux)
+
 LICENCE
 ======
 
