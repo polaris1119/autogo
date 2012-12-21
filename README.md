@@ -85,10 +85,18 @@ autogo就是为了让Go开发更方便。在开发阶段，做到修改之后，
       {
           "name": "test",
           "root": "../test",
+          "go_way": "install",
+          "deamon": true,
+          "main": "test/test.go"
           "depends": []
       }
     ]
-    root可以是相对路径或决定路径、
+    root可以是相对路径或决定路径,
+    go_way go编译运行方式，可以是run、build或insall，可选，默认为install
+    deamon 项目的运行方式：执行完后自动退出还是会一直运行
+    main 项目main函数所在文件路径，相对src
+    depends 依赖的其他gopath
+    
 
 4、启动autogo（如果autogo没编译，先通过make编译）。注意，启动autogo应该cd到autogo所在根目录执行bin/autogo启动。
 
