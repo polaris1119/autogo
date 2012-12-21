@@ -105,8 +105,14 @@ func New(name, root, goWay, mainFile string, deamon bool, depends ...string) (*P
     options := ""
     switch goWay {
     case "run":
+        if mainFile == "" {
+            mainFile = name + ".go"
+        }
         mainFile = filepath.Join("src", mainFile)
     case "build":
+        if mainFile == "" {
+            mainFile = name + ".go"
+        }
         mainFile = filepath.Join("src", mainFile)
         if !files.Exist(binAbsolutePath) {
             if err = os.Mkdir(binAbsolutePath, 0777); err != nil {

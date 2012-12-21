@@ -1,18 +1,40 @@
 package simplejson
 
 import (
+    "bytes"
     "encoding/json"
     "errors"
+    "io/ioutil"
     "log"
+    "strings"
 )
 
 // returns the current implementation version
 func Version() string {
-    return "0.4.1"
+    return "0.5"
 }
 
 type Json struct {
     data interface{}
+}
+
+// 解析json文件，过滤掉注释（只支持注释在单独一行，以"//"注释）
+func ParseFile(filename string) (*Json, error) {
+    stream, err := ioutil.ReadFile(filename)
+    if err != nil {
+        return nil, err
+    }
+    content := string(stream)
+    var builder bytes.Buffer
+    lines := strings.Split(content, "\n")
+    for _, line := range lines {
+        line = strings.TrimSpace(line)
+        if line == "" || strings.HasPrefix(line, "//") {
+            continue
+        }
+        builder.WriteString(line)
+    }
+    return NewJson(builder.Bytes())
 }
 
 // NewJson returns a pointer to a new `Json` object
@@ -56,6 +78,7 @@ func (j *Json) Get(key string) *Json {
     return &Json{nil}
 }
 
+// GetStringSlice returns slice of string.
 func (j *Json) GetStringSlice(key string) []string {
     currentJson := j.Get(key)
     a, err := currentJson.Array()

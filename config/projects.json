@@ -1,10 +1,27 @@
+// autogo监控的项目配置信息。
+// 可以同时监控多个项目，每个项目的配置是一个json object
 [
     {
-        "name": "test",
-        "root": "../test",
-        "go_way": "install",
+        // 项目名称（必须）
+        "name": "",
+
+        // 项目的根路径，可以是相对路径或绝对路径（必须）
+        "root": "",
+
+        // go编译运行方式，可以是run、build或insall。（可选，默认为install）
+        "go_way": "",
+
+        // 项目的运行方式：执行完后自动退出还是会一直运行（可选，默认为true）
         "deamon": true,
-        "main": "test1/test.go",
+
+        // main 项目main函数所在文件路径，相对src。可选。对于go_way不同，对该配置的要求也不一样
+        //  1）当go_way为run时，该配置有时（有值），直接go run 该值；否则要求src目录下的main包文件，名字为项目名；
+        //  2）当go_way为build时，该配置有时（有值），必须是"dir/filename.go"这种形式；没有时，要求main包src根目录中。生成的可执行文件名总是项目名
+        //  3）当go_way为install时，该配置有时（有值），必须是"dir/filename.go"这种形式，生成的可执行文件名是dir；没有时，要求main包在一个名称为项目名的文件夹中中，生成的可执行文件名是项目名称；
+        "main": "",
+
+        // 依赖其他项目（一般只是库）
         "depends": []
     }
 ]
+// 可以查看conf_example.json配置示例

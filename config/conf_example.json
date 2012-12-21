@@ -1,0 +1,10 @@
+// 配置示例
+// 假如，有一个项目名称是studygolang，根目录和autogo在同一个目录下。src下有一个blog文件夹，存放了main包(main.go)。可以如下配置：
+[
+    {
+        "name": "test",
+        "root": "../test",
+        "go_way": "install",
+        "main": "blog/main.go"
+    }
+]

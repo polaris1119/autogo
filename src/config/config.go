@@ -2,7 +2,6 @@ package config
 
 import (
     "fsnotify"
-    "io/ioutil"
     "log"
     "project"
     "simplejson"
@@ -49,19 +48,14 @@ func Watch(configFile string) error {
 
 // Load加载解析配置文件
 func Load(configFile string) error {
-    content, err := ioutil.ReadFile(configFile)
+    allConfig, err := simplejson.ParseFile(configFile)
     if err != nil {
-        log.Println("[ERROR] 读配置文件错误")
-        return err
-    }
-    allConfig, err := simplejson.NewJson(content)
-    if err != nil {
-        log.Println("[ERROR] 配置文件格式错误")
+        log.Println("[ERROR] 配置文件格式错误", err)
         return err
     }
     middleJs, err := allConfig.Array()
     if err != nil {
-        log.Println("[ERROR] 配置文件格式错误")
+        log.Println("[ERROR] 配置文件格式错误", err)
         return err
     }
     for i, length := 0, len(middleJs); i < length; i++ {
