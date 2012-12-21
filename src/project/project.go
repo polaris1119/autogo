@@ -9,6 +9,7 @@ import (
     "bytes"
     "errors"
     "files"
+    "fmt"
     "fsnotify"
     "log"
     "os"
@@ -29,8 +30,6 @@ var (
     successFlag = "finished"
 
     PrjRootErr = errors.New("project can't be found'!")
-    // 项目编译有语法错误
-    PrjSyntaxError = errors.New("project source syntax error!")
 )
 
 func init() {
@@ -64,7 +63,9 @@ func Watch(name, root, goWay, mainFile string, deamon bool, depends ...string) e
     if err = prj.Start(); err != nil {
         return err
     }
-    log.Println("[INFO] 项目", name, "启动完成")
+    if deamon {
+        log.Println("[INFO] 项目", name, "启动完成")
+    }
     return nil
 }
 
@@ -177,16 +178,25 @@ func (this *Project) Watch() error {
             case <-eventNum:
                 if this.GoWay == "run" {
                     if err = this.Run(); err != nil {
-                        log.Println("run error:", err)
+                        log.Println("run error，详细信息如下：")
+                        fmt.Println(err)
                     }
                     break
                 }
                 if err = this.Compile(); err != nil {
-                    log.Println("complie error: ", err)
+                    log.Println("complie error，详细信息如下：")
+                    fmt.Println(err)
                     break
                 }
-                if err = this.Restart(); err != nil {
-                    log.Println("restart error:", err)
+                if this.deamon {
+                    if err = this.Stop(); err != nil {
+                        log.Println("stop error，详细信息如下：")
+                        fmt.Println(err)
+                    }
+                }
+                if err = this.Start(); err != nil {
+                    log.Println("start error，详细信息如下：")
+                    fmt.Println(err)
                 }
             }
             if this.deamon && err == nil {
@@ -284,7 +294,7 @@ func (this *Project) Run() error {
         log.Println("=====================")
         log.Println("[INFO] 项目", this.name, "的运行结果:")
         for _, val := range strings.Split(errOutput, "\n") {
-            log.Println(val)
+            fmt.Println(val)
         }
         log.Println("=====================")
         return nil
@@ -309,7 +319,7 @@ func (this *Project) Run() error {
     }
     defer file.Close()
     tpl.Execute(file, errOutput)
-    return PrjSyntaxError
+    return errors.New(errOutput)
 }
 
 // Compile 编译当前Project。
@@ -357,7 +367,7 @@ func (this *Project) Compile() error {
     defer file.Close()
     output = strings.Replace(output, "finished", "", -1)
     tpl.Execute(file, output)
-    return PrjSyntaxError
+    return errors.New(output)
 }
 
 // Start 启动该Project
@@ -369,13 +379,31 @@ func (this *Project) Start() error {
     this.ChangeToRoot()
     defer os.Chdir(path)
     cmd := exec.Command(this.getExeFilePath(), this.execArgs...)
-    return cmd.Start()
+    var stdout bytes.Buffer
+    cmd.Stdout = &stdout
+    err = cmd.Start()
+    if this.deamon {
+        return err
+    }
+
+    if err = cmd.Wait(); err != nil {
+        return errors.New("启动失败!")
+    }
+    output := strings.TrimSpace(stdout.String())
+    log.Println("=====================")
+    log.Println("[INFO] 项目", this.name, "的运行结果:")
+    for _, val := range strings.Split(output, "\n") {
+        fmt.Println(val)
+    }
+    log.Println("=====================")
+    return nil
 }
 
 // 重新启动该Project
 func (this *Project) Restart() error {
     if err := this.Stop(); err != nil {
-        log.Println("stop project error!", err)
+        log.Println("stop project error! 信息信息如下：")
+        fmt.Println(err)
         return err
     }
     return this.Start()

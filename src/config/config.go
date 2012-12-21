@@ -1,6 +1,7 @@
 package config
 
 import (
+    "fmt"
     "fsnotify"
     "log"
     "project"
@@ -68,7 +69,8 @@ func Load(configFile string) error {
         depends := oneProject.GetStringSlice("depends")
         err = project.Watch(name, root, goWay, mainFile, deamon, depends...)
         if err != nil {
-            log.Println("[ERROR] 监控Project：", name, " 出错：", err)
+            log.Println("[ERROR] 监控Project：", name, " 出错。详细信息如下：")
+            fmt.Println(err)
         }
     }
     return err
