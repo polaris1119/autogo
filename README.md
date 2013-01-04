@@ -14,7 +14,7 @@ autogo就是为了让Go开发更方便。在开发阶段，做到修改之后，
   该文件的作用是配置需要被autogo管理的项目，一个项目是一个json对象（{}），包括name、root和depends，
   其中depends是可选的，name是项目最终生成可执行文件的文件名（也就是main包所在的目录）；root是项目的根目录。
 
-3、执行make(linux)/make.bat(windows)，编译autogo
+3、执行install.sh(linux)/install.bat(windows)，编译autogo
 
 4、运行autogo：bin/autogo
   注意，运行autogo时，当前目录要切换到autogo所在目录
